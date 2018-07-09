@@ -31,6 +31,14 @@ def findMax(v, tol=1e-3):
     return max_value
 
 
+def scale(V, tol=1e-6):
+    max_V = np.max(np.abs(V), axis=0)
+    np.clip(max_V, tol, None, out=max_V)
+    scaled_V = V / max_V
+    D = np.sum(V * scaled_V, axis=0)
+    return D, scaled_V
+
+
 def propagateRectangle(x_rectangle, w_rectangle, linear_dynamics_params):
     # Fitting hyper rectangle at next time step
     A, G = linear_dynamics_params
@@ -38,17 +46,21 @@ def propagateRectangle(x_rectangle, w_rectangle, linear_dynamics_params):
     _, R_w_i, S_w_i = w_rectangle
     M = np.hstack((np.dot(A, R_i * S_i), np.dot(G, R_w_i * S_w_i)))
     U, S, V = np.linalg.svd(M, full_matrices=False)
-    D = np.array([findMax(v) for v in V])
-    S_next = S * D
+    n = S.size
+    D1, ei_in = scale(V[:, :n].T)
+    D2, ewi_in = scale(V[:, n:].T)
+    S_next = S * (D1 + D2)
     mu_next = np.dot(A, mu_i)
-    return HyperRectangle(mu_next, U, S_next)
+    input_points = np.vstack((ei_in, ewi_in))
+    # input_points[:, 0] corresponds to input point for 1st axis
+    return HyperRectangle(mu_next, U, S_next), input_points
 
 
 if __name__ == "__main__":
     # For now considering a 2D system easy to visualize
     # Linear params
     A = np.eye(2)
-    A[0, 1] = 0.01
+    #A[0, 1] = 0.01
     G = np.eye(2)
     # G = 0.1*np.diag([1, 0.5])
     # State hyper rectangle params
@@ -59,8 +71,8 @@ if __name__ == "__main__":
     # Noise hyper rectangle params
     theta_w_i = np.pi / 4
     R_w_i = rotation(theta_w_i)
-    S_w_i = np.array([2, 2.001])
-    rect_out = propagateRectangle(HyperRectangle(mu_i, R_i, S_i),
+    S_w_i = np.array([2, 2.5])
+    rect_out, _ = propagateRectangle(HyperRectangle(mu_i, R_i, S_i),
                                   HyperRectangle(None, R_w_i, S_w_i),
                                   (A, G))
     print(rect_out)
@@ -73,7 +85,7 @@ if __name__ == "__main__":
     S_i = np.array([2, 2, 2])
     R_w_i = np.array([R_i[1], R_i[0], R_i[2]])
     S_w_i = np.array([0.1, 0.1, 0.1])
-    rect_out2 = propagateRectangle(HyperRectangle(mu_i, R_i, S_i),
+    rect_out2, _ = propagateRectangle(HyperRectangle(mu_i, R_i, S_i),
                                    HyperRectangle(None, R_w_i, S_w_i),
                                    (A, G))
     print(rect_out2)
