@@ -73,8 +73,8 @@ if __name__ == "__main__":
     R_w_i = rotation(theta_w_i)
     S_w_i = np.array([2, 2.5])
     rect_out, _ = propagateRectangle(HyperRectangle(mu_i, R_i, S_i),
-                                  HyperRectangle(None, R_w_i, S_w_i),
-                                  (A, G))
+                                     HyperRectangle(None, R_w_i, S_w_i),
+                                     (A, G))
     print(rect_out)
     # 3D test case
     A = np.random.sample((3, 3))
@@ -86,6 +86,6 @@ if __name__ == "__main__":
     R_w_i = np.array([R_i[1], R_i[0], R_i[2]])
     S_w_i = np.array([0.1, 0.1, 0.1])
     rect_out2, _ = propagateRectangle(HyperRectangle(mu_i, R_i, S_i),
-                                   HyperRectangle(None, R_w_i, S_w_i),
-                                   (A, G))
+                                      HyperRectangle(None, R_w_i, S_w_i),
+                                      (A, G))
     print(rect_out2)

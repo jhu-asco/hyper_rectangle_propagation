@@ -65,7 +65,7 @@ class TestFitHyperRectangle(unittest.TestCase):
         # Propagate
         dt = 1.0
         rect_out, in_points = PropagateRect.propagateRectangle(
-        0, dt, rect_x, rect_w, linear_dynamics, linear_controller)
+            0, dt, rect_x, rect_w, linear_dynamics, linear_controller)
         Abar = np.eye(2) + dt * (A + np.outer(B, K))
         Gbar = G * dt
         l_rect_out, l_in_points = propagateRectangle(rect_x, rect_w,
@@ -107,7 +107,7 @@ class TestFitHyperRectangle(unittest.TestCase):
         # Propagate
         dt = 1.0
         rect_out, in_points = PropagateRect.propagateLinearizedRectangle(
-        0, dt, rect_x, rect_w, linear_dynamics, linear_controller, 1e-2)
+            0, dt, rect_x, rect_w, linear_dynamics, linear_controller, 1e-2)
         Abar = np.eye(2) + dt * (A + np.outer(B, K))
         Gbar = G * dt
         l_rect_out, l_in_points = propagateRectangle(rect_x, rect_w,

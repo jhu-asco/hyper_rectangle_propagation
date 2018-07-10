@@ -101,7 +101,8 @@ def propagateMean(i, dt, x_rectangle, w_rectangle, dynamics, controller):
                                                     x_rectangle.S)
     out_rect, in_points = PropLinearRect.propagateRectangle(
         x_mod_rectangle, w_rectangle, (Abar, G * dt))
-    mun = x_rectangle.mu + dt * dynamics.xdot(i, x_rectangle.mu, u0, np.zeros(n))
+    mun = x_rectangle.mu + dt * \
+        dynamics.xdot(i, x_rectangle.mu, u0, np.zeros(n))
     return mun, out_rect, in_points
 
 
@@ -118,10 +119,10 @@ def propagateRectangle(i, dt, x_rectangle, w_rectangle, dynamics, controller):
     input_points = []
     for i in range(n):
         args = (mun, max_r, Rn[:, i], i, dt, x_rectangle, w_rectangle,
-               dynamics, controller)
+                dynamics, controller)
         res = least_squares(axis_residual, in_points[:, i], bounds=(-1, 1),
-                           args=args,
-                           max_nfev=1000)
+                            args=args,
+                            max_nfev=1000)
         opt_e = res.x
         # opt_e = in_points[:, i]
         opt_res = axis_residual(opt_e, *args)
