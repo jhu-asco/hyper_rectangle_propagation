@@ -98,7 +98,7 @@ def propagateMean(i, dt, x_rectangle, w_rectangle, dynamics, controller):
     K = controller.jacobian(i, x_rectangle.mu)
     Abar = getClosedLoopDynamicMatrix(dt, A, B, K)
     x_mod_rectangle = HyperRectangle(np.zeros(n), x_rectangle.R,
-        x_rectangle.S)
+                                     x_rectangle.S)
     out_rect, in_points = PropLinearRect.propagateRectangle(
         x_mod_rectangle, w_rectangle, (Abar, G * dt))
     mun = x_rectangle.mu + dt * \

@@ -9,7 +9,8 @@ from hyper_rectangle_propagation.rotation2d import rotation
 
 class TestHyperRectangle(unittest.TestCase):
     def testProject2DRectangle(self):
-        in_rect = HyperRectangle(np.zeros(2), rotation(np.pi / 3), np.array([1, 2]))
+        in_rect = HyperRectangle(
+            np.zeros(2), rotation(np.pi / 3), np.array([1, 2]))
         out_rect = projectRectangle(in_rect)
         np_testing.assert_allclose(in_rect.mu, out_rect.mu)
         np_testing.assert_allclose(in_rect.R, out_rect.R)
