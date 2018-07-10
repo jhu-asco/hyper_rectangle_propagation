@@ -26,9 +26,6 @@ class TestFitHyperRectangle(unittest.TestCase):
         np_testing.assert_almost_equal(rect_out.R[:, 0], -1 * R_i[:, 0])
         np_testing.assert_almost_equal(rect_out.R[:, 1], R_i[:, 1])
         np_testing.assert_almost_equal(rect_out.S, S_i + S_w_i)
-        in_points[:, 0] = -1 * in_points[:, 0]
-        np_testing.assert_almost_equal(in_points,
-                                       np.vstack((np.eye(2), np.eye(2))))
 
 
 if __name__ == "__main__":
