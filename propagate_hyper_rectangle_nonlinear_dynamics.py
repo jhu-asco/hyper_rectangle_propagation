@@ -7,7 +7,7 @@ Created on Fri Jul  6 22:29:01 2018
 import numpy as np
 import hyper_rectangle_propagation.propagate_hyper_rectangle_linear_dynamics as PropLinearRect
 from scipy.optimize import least_squares
-#from optimal_control_framework.dynamics import AbstractDynamicSystem
+from hyper_rectangle import HyperRectangle
 
 
 def projectToRectangle(rectangle, e):
@@ -97,8 +97,8 @@ def propagateMean(i, dt, x_rectangle, w_rectangle, dynamics, controller):
     A, B, G = dynamics.jacobian(i, x_rectangle.mu, u0, w_rectangle.mu)
     K = controller.jacobian(i, x_rectangle.mu)
     Abar = getClosedLoopDynamicMatrix(dt, A, B, K)
-    x_mod_rectangle = PropLinearRect.HyperRectangle(np.zeros(n), x_rectangle.R,
-                                                    x_rectangle.S)
+    x_mod_rectangle = HyperRectangle(np.zeros(n), x_rectangle.R,
+        x_rectangle.S)
     out_rect, in_points = PropLinearRect.propagateRectangle(
         x_mod_rectangle, w_rectangle, (Abar, G * dt))
     mun = x_rectangle.mu + dt * \
@@ -128,7 +128,7 @@ def propagateRectangle(i, dt, x_rectangle, w_rectangle, dynamics, controller):
         opt_res = axis_residual(opt_e, *args)
         scale_out.append(max_r - opt_res)
         input_points.append(opt_e)
-    return (PropLinearRect.HyperRectangle(mun, Rn, np.array(scale_out)),
+    return (HyperRectangle(mun, Rn, np.array(scale_out)),
             np.vstack(input_points).T)
 
 
@@ -147,5 +147,5 @@ def propagateLinearizedRectangle(i, dt, x_rectangle, w_rectangle, dynamics,
             i, dt, x_rectangle, w_rectangle, dynamics, controller)
         scale_out.append(scale)
         input_points.append(e_new)
-    return (PropLinearRect.HyperRectangle(mun, Rn, np.array(scale_out)),
+    return (HyperRectangle(mun, Rn, np.array(scale_out)),
             np.vstack(input_points).T)
