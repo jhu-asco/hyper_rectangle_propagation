@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-from fit_hyper_rectangles.propagate_hyper_rectangle_linear_dynamics import *
+from hyper_rectangle_propagation.propagate_hyper_rectangle_linear_dynamics import *
 import unittest
 import numpy.testing as np_testing
 import numpy as np

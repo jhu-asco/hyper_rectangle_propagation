@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
-import fit_hyper_rectangles.propagate_hyper_rectangle_nonlinear_dynamics as PropagateRect
-from fit_hyper_rectangles.propagate_hyper_rectangle_linear_dynamics import (
-    rotation, HyperRectangle)
+import hyper_rectangle_propagation.propagate_hyper_rectangle_nonlinear_dynamics as PropagateRect
+from hyper_rectangle_propagation.propagate_hyper_rectangle_linear_dynamics import (
+    rotation, HyperRectangle, propagateRectangle)
 from optimal_control_framework.dynamics import AbstractDynamicSystem
 from optimal_control_framework.controllers import AbstractController
 import unittest
@@ -42,12 +42,12 @@ class LinearController(AbstractController):
 class TestFitHyperRectangle(unittest.TestCase):
     def testFitHyperRectangleLinearDyn(self):
         # Linear params
-        #A = np.array([[0, 1], [0, 0]])
-        A = np.zeros(2)
+        A = np.array([[0, 1], [0, 0]])
+        #A = np.zeros(2)
         B = np.array([0, 1])
         G = np.eye(2)
-        #K = np.array([-1, -1])
-        K = np.array([0, 0])
+        K = np.array([-1, -1])
+        #K = np.array([0, 0])
         linear_dynamics = LinearDynamics((A, B, G))
         linear_controller = LinearController(linear_dynamics, K)
 
@@ -66,6 +66,14 @@ class TestFitHyperRectangle(unittest.TestCase):
         dt = 1.0
         rect_out, in_points = PropagateRect.propagateRectangle(
         0, dt, rect_x, rect_w, linear_dynamics, linear_controller)
+        Abar = np.eye(2) + dt * (A + np.outer(B, K))
+        Gbar = G * dt
+        l_rect_out, l_in_points = propagateRectangle(rect_x, rect_w,
+                                                     (Abar, Gbar))
+        np_testing.assert_almost_equal(rect_out.mu, l_rect_out.mu)
+        np_testing.assert_almost_equal(rect_out.R, l_rect_out.R)
+        np_testing.assert_almost_equal(rect_out.S, l_rect_out.S)
+        np_testing.assert_almost_equal(in_points, l_in_points)
 #        np_testing.assert_almost_equal(rect_out.mu, mu_i)
 #        np_testing.assert_almost_equal(rect_out.R[:, 0], -1*R_i[:, 0])
 #        np_testing.assert_almost_equal(rect_out.R[:, 1], R_i[:, 1])
@@ -76,12 +84,12 @@ class TestFitHyperRectangle(unittest.TestCase):
 
     def testFitHyperRectangleLinearizedDyn(self):
         # Linear params
-        #A = np.array([[0, 1], [0, 0]])
-        A = np.zeros(2)
+        A = np.array([[0, 1], [0, 0]])
+        #A = np.zeros(2)
         B = np.array([0, 1])
         G = np.eye(2)
-        #K = np.array([-1, -1])
-        K = np.array([0, 0])
+        K = np.array([-1, -1])
+        #K = np.array([0, 0])
         linear_dynamics = LinearDynamics((A, B, G))
         linear_controller = LinearController(linear_dynamics, K)
 
@@ -100,6 +108,14 @@ class TestFitHyperRectangle(unittest.TestCase):
         dt = 1.0
         rect_out, in_points = PropagateRect.propagateLinearizedRectangle(
         0, dt, rect_x, rect_w, linear_dynamics, linear_controller, 1e-2)
+        Abar = np.eye(2) + dt * (A + np.outer(B, K))
+        Gbar = G * dt
+        l_rect_out, l_in_points = propagateRectangle(rect_x, rect_w,
+                                                     (Abar, Gbar))
+        np_testing.assert_almost_equal(rect_out.mu, l_rect_out.mu)
+        np_testing.assert_almost_equal(rect_out.R, l_rect_out.R)
+        np_testing.assert_almost_equal(rect_out.S, l_rect_out.S)
+        np_testing.assert_almost_equal(in_points, l_in_points)
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ Created on Fri Jul  6 22:29:01 2018
 @author: gowtham
 """
 import numpy as np
-import propagate_hyper_rectangle_linear_dynamics as PropLinearRect
+import hyper_rectangle_propagation.propagate_hyper_rectangle_linear_dynamics as PropLinearRect
 from scipy.optimize import least_squares
 #from optimal_control_framework.dynamics import AbstractDynamicSystem
 
@@ -113,7 +113,7 @@ def propagateRectangle(i, dt, x_rectangle, w_rectangle, dynamics, controller):
     Rn = out_rect.R
     # lb = -1*np.ones(2*n)
     # ub = np.ones(2*n)
-    max_r = 2 * np.max(out_rect.S)
+    max_r = 10 * np.max(out_rect.S)
     scale_out = []
     input_points = []
     for i in range(n):

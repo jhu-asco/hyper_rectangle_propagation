@@ -31,12 +31,15 @@ def findMax(v, tol=1e-3):
     return max_value
 
 
-def scale(V, tol=1e-6):
-    max_V = np.max(np.abs(V), axis=0)
-    np.clip(max_V, tol, None, out=max_V)
-    scaled_V = V / max_V
-    D = np.sum(V * scaled_V, axis=0)
-    return D, scaled_V
+def scale(V):
+    sign_V = np.sign(V)
+    D = np.sum(V * sign_V, axis=1)
+    return D, sign_V
+#    max_V = np.max(np.abs(V), axis=0)
+#    np.clip(max_V, tol, None, out=max_V)
+#    scaled_V = V / max_V
+#    D = np.sum(V * scaled_V, axis=0)
+#    return D, scaled_V
 
 
 def propagateRectangle(x_rectangle, w_rectangle, linear_dynamics_params):
@@ -46,14 +49,11 @@ def propagateRectangle(x_rectangle, w_rectangle, linear_dynamics_params):
     _, R_w_i, S_w_i = w_rectangle
     M = np.hstack((np.dot(A, R_i * S_i), np.dot(G, R_w_i * S_w_i)))
     U, S, V = np.linalg.svd(M, full_matrices=False)
-    n = S.size
-    D1, ei_in = scale(V[:, :n].T)
-    D2, ewi_in = scale(V[:, n:].T)
-    S_next = S * (D1 + D2)
+    D, e_in = scale(V)
+    S_next = S * D
     mu_next = np.dot(A, mu_i)
-    input_points = np.vstack((ei_in, ewi_in))
     # input_points[:, 0] corresponds to input point for 1st axis
-    return HyperRectangle(mu_next, U, S_next), input_points
+    return HyperRectangle(mu_next, U, S_next), e_in.T
 
 
 if __name__ == "__main__":
