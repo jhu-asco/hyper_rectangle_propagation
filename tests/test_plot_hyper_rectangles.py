@@ -3,6 +3,7 @@
 import unittest
 import numpy as np
 import numpy.testing as np_testing
+from hyper_rectangle_propagation.plot_2D_hyper_rectangles import *
 from hyper_rectangle_propagation.hyper_rectangle import HyperRectangle
 from hyper_rectangle_propagation.rotation2d import rotation
 

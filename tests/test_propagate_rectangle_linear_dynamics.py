@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 from hyper_rectangle_propagation.propagate_hyper_rectangle_linear_dynamics import *
+from hyper_rectangle_propagation.rotation2d import rotation
+from hyper_rectangle_propagation.hyper_rectangle import HyperRectangle
 import unittest
 import numpy.testing as np_testing
 import numpy as np

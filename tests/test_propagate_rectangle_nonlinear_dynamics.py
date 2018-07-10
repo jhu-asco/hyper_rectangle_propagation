@@ -1,7 +1,9 @@
 #!/usr/bin/env python2
 import hyper_rectangle_propagation.propagate_hyper_rectangle_nonlinear_dynamics as PropagateRect
 from hyper_rectangle_propagation.propagate_hyper_rectangle_linear_dynamics import (
-    rotation, HyperRectangle, propagateRectangle)
+    propagateRectangle)
+from hyper_rectangle_propagation.rotation2d import rotation
+from hyper_rectangle_propagation.hyper_rectangle import HyperRectangle
 from optimal_control_framework.dynamics import AbstractDynamicSystem
 from optimal_control_framework.controllers import AbstractController
 import unittest
